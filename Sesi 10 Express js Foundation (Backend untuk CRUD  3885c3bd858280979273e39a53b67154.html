@@ -1,0 +1,849 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Sesi 10: Express.js Foundation (Backend untuk CRUD Products)</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3885c3bd-8582-8097-9273-e39a53b67154" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📒</span></div><h1 class="page-title" dir="auto"><strong>Sesi 10: Express.js Foundation (Backend untuk CRUD Products)</strong></h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8075-bdbe-d3e61721caf7" class="">🎯 Tujuan Sesi</h2></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-808d-90f4-cd57b4864dd7" class="">Setelah sesi ini, kamu bisa:</p></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8093-8b24-e04eea0b4a81" class="bulleted-list"><li style="list-style-type:disc">Membuat server backend sederhana dengan Express.js</li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8053-b752-e071328992f1" class="bulleted-list"><li style="list-style-type:disc">Memahami alur <strong>Request → Response lifecycle</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-80ec-8d1f-e2e39cd09f9c" class="bulleted-list"><li style="list-style-type:disc">Menyediakan API dasar untuk <strong>CRUD Products</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-80a4-8c25-f28f58e16eae" class="bulleted-list"><li style="list-style-type:disc">Menghubungkan frontend (React/Next) ke backend</li></ul></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8083-81fd-ce236d1de659"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8017-a38f-d7cc63949e84" class="">💻 Setup</h2></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8069-aded-d005ca8c6a56" class="">Tools yang perlu disiapkan:</p></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8004-a593-ec3fcc37ef1e" class="bulleted-list"><li style="list-style-type:disc">Download Postman <a href="https://www.postman.com/">https://www.postman.com/</a></li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-808f-9dde-f38239a08e5b" class="bulleted-list"><li style="list-style-type:disc">regis and connect to github <a href="https://vercel.com/">https://vercel.com</a></li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-80c6-9e53-fbeb817a174c" class="bulleted-list"><li style="list-style-type:disc">backend deploy <a href="https://render.com/">https://render.com</a> / <a href="https://railway.app/">https://railway.app</a></li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8066-8ab1-e5d986ebca4e" class="bulleted-list"><li style="list-style-type:disc">turso mysql lite database <a href="https://turso.tech/signin">https://turso.tech/signin</a></li></ul></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80f0-b72f-e26f079c3ae1"/></div><div style="display:contents" dir="ltr"><figure id="3885c3bd-8582-80f5-a440-d30ee83ae346" class="image"><a href="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image.png"><img style="width:704.0104370117188px" src="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image.png"/></a></figure></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-8078-93d4-ef9404924564" class="">🧠 1. Konsep Inti (Wajib Paham)</h1></div><div style="display:contents" dir="ltr"><figure id="3885c3bd-8582-80d3-b26e-c4a2b269f19b" class="image"><a href="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image%201.png"><img style="width:704.02783203125px" src="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image%201.png"/></a></figure></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-801a-9ea0-d151e8ed2eed" class="">🔄 Request &amp; Response Lifecycle</h2></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-804d-8967-c7b25a2939f6" class="">Bayangkan alurnya seperti ini:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3885c3bd-8582-80bb-b161-e2392744a017" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Browser / React App
+        ↓ (HTTP Request: GET/POST/PUT/DELETE)
+Express Server (Node.js)
+        ↓
+Middleware (CORS, Parser, Auth, dll)
+        ↓
+Route Handler (logic CRUD)
+        ↓
+Response JSON
+        ↓
+Frontend menerima data</code></pre></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8078-b1f3-d819fca5fcf9" class="">📌 Contoh nyata:</p></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8006-b193-e6c2d0e92282" class="bulleted-list"><li style="list-style-type:disc">React <code>fetch(&#x27;/api/products&#x27;)</code></li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-80af-8765-ec217bebdf56" class="bulleted-list"><li style="list-style-type:disc">Express balas dengan list product JSON</li></ul></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-801a-9ac7-e162bb5da2a1"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-80ee-b704-f53c61ce0627" class="">⚙️ 2. Setup Express Server (Boilerplate)</h1></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80ec-927c-fbea63a2ff4c" class="">📦 Install</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3885c3bd-8582-80c8-b5d7-e86d141f88df" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">npm init -y
+npm install express cors</code></pre></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8095-8b0b-d23e5cfa2e09" class="">(Optional dev)</p></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-808d-a431-fff7b7d6f8cd" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">npm install nodemon -D</code></pre></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8040-9a2d-f2b577f7ee58" class="">Tambahkan script:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-QXFMVAusM85vUYDaNgcYeU3rzSlc+bTV4JvkfJhjxSHlQEo+ig53BtnGkvFTiNJh8D+wv6uWAQ2vJaVmxe8d3w==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3885c3bd-8582-80fb-8dcc-f0989d91717f" class="code code-wrap"><code class="language-json" style="white-space:pre-wrap;word-break:break-all">&quot;scripts&quot;: {
+  &quot;dev&quot;: &quot;nodemon index.js&quot;
+}</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8049-bd11-c3cd768bb4a2"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8006-a359-c25270e3dd1b" class="">🏗️ Struktur Minimal</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-804e-b2ca-c1888b12c243" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">/backend
+  index.js</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8010-9f5b-e2fb1ed1b55f"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8085-a764-eddac79efb40" class="">🚀 Server Basic Express</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js" integrity="sha512-m3JYEI6gx5fh9jF10FjGoMzVKcV2N6nchcDcqPCdI1L3R2WQV7br2XVNR8iTLb2daOMRl3zldbcfT40xU2ntVw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3885c3bd-8582-80d3-b6f1-d19532ad7271" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">const express = require(&quot;express&quot;);
+const cors = require(&quot;cors&quot;);
+
+const app = express();
+const PORT = 3001;
+
+// ===== MIDDLEWARE =====
+app.use(cors()); // allow frontend access
+app.use(express.json()); // parse JSON body
+
+// ===== ROUTES =====
+app.get(&quot;/&quot;, (req, res) =&gt; {
+  res.send(&quot;Express server is running 🚀&quot;);
+});
+
+app.listen(PORT, () =&gt; {
+  console.log(`Server running on http://localhost:${PORT}`);
+});</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-809f-8081-dce1c044efff"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-80ee-8e98-d7de24263ef1" class="">🔌 3. Middleware Concept (Penting untuk Mid Level)</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8058-beca-d32695d731a0" class="">Middleware = “filter sebelum masuk logic utama”</p></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8039-b00a-e9fa1dfe9db0" class="">Contoh flow:</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-8083-92e3-d41b12916220" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Request → CORS → JSON Parser → Route → Response</code></pre></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8003-abb7-e791ddd8c9aa" class="">🧩 CORS Middleware</h2></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8095-af1a-dbd60b1c2b8d" class="">Mengizinkan frontend (React/Next) akses backend:</p></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-8008-ac11-fc4c682ce22d" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.use(cors());</code></pre></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-801c-950c-e830a4840c43" class="">🧩 Body Parser (built-in Express)</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-8008-8e5a-e8714fd7d3c4" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.use(express.json());</code></pre></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-805b-98ef-f77c507b78c1" class="">📌 Artinya:</p></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-8034-9a2f-ff93042f24c0" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">req.body</code></pre></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-80e4-b800-d755fb3d0a42" class="">akan otomatis terbaca untuk JSON POST/PUT.</p></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8038-be95-cde11b292029"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-8002-894d-e1c5767e3d63" class="">📦 4. Mini CRUD Products (In-Memory)</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8064-b98f-f9862762ebc4" class="">Ini nyambung ke sesi Zustand + MiniStore project kamu.</p></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80da-8aca-f81310289c8b"/></div><div style="display:contents" dir="ltr"><figure id="3885c3bd-8582-8069-a48a-e4f6929eebb9" class="image"><a href="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image%202.png"><img style="width:704.02783203125px" src="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image%202.png"/></a></figure></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80c4-9b7b-ed38772ed5c4" class="">🧠 Dummy Data</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-80d8-a7dc-f4f2b6c76e8a" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">let products = [
+  { id: 1, name: &quot;Laptop&quot;, price: 1000 },
+  { id: 2, name: &quot;Mouse&quot;, price: 50 },
+];</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8046-b5db-d149596cb362"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80b9-a0ec-c1f9991a36d1" class="">📥 READ (GET all products)</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-8099-a829-e1b5efa781b7" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.get(&quot;/products&quot;, (req, res) =&gt; {
+  res.json(products);
+});</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80c1-bd60-f80e68ba7f8a"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80e2-83b8-e2b6fddf4df5" class="">📥 READ by ID</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-808d-98f2-c259bb0636d7" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.get(&quot;/products/:id&quot;, (req, res) =&gt; {
+  const id = parseInt(req.params.id);
+  const product = products.find((p) =&gt; p.id === id);
+
+  if (!product) {
+    return res.status(404).json({ message: &quot;Product not found&quot; });
+  }
+
+  res.json(product);
+});</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8003-a390-c338e37605bc"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80e9-b0f3-cf2608a891b0" class="">➕ CREATE Product (POST)</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-809d-a2b1-c2fece089bfa" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.post(&quot;/products&quot;, (req, res) =&gt; {
+  const { name, price } = req.body;
+
+  const newProduct = {
+    id: products.length + 1,
+    name,
+    price,
+  };
+
+  products.push(newProduct);
+
+  res.status(201).json(newProduct);
+});</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8045-9ed0-d1e217b05201"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80f8-87b5-c22f1166a72e" class="">✏️ UPDATE Product (PUT)</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-803b-883f-e8e134357a97" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.put(&quot;/products/:id&quot;, (req, res) =&gt; {
+  const id = parseInt(req.params.id);
+
+  const index = products.findIndex((p) =&gt; p.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: &quot;Product not found&quot; });
+  }
+
+  products[index] = {
+    ...products[index],
+    ...req.body,
+  };
+
+  res.json(products[index]);
+});</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-803e-9b4f-c301f7cb6f3e"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8016-97c7-d2f905bafea4" class="">❌ DELETE Product</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-802f-82f9-e737a26bf1d7" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">app.delete(&quot;/products/:id&quot;, (req, res) =&gt; {
+  const id = parseInt(req.params.id);
+
+  products = products.filter((p) =&gt; p.id !== id);
+
+  res.json({ message: &quot;Product deleted&quot; });
+});</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8022-b90b-dd93ff533dd2"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-8042-bc5d-d8e6d2afab84" class="">🌐 5. Testing API (Manual)</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-809b-bf58-ef82bb0ee2c5" class="">Gunakan:</p></div><div style="display:contents" dir="auto"><h3 id="3885c3bd-8582-8034-903d-f2df2b570631" class="">Postman / Insomnia / Thunder Client</h3></div><div style="display:contents" dir="auto"><h3 id="3885c3bd-8582-805d-a2d4-c6a13473fc51" class="">Endpoint:</h3></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-807d-84b4-d532d3ae52b2" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">GET    /products
+GET    /products/1
+POST   /products
+PUT    /products/1
+DELETE /products/1</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80ae-ac40-da12728d6a86"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-804b-aae3-d3482d736904" class="">🔗 6. Koneksi ke React / Next.js (Inline Context dari sesi sebelumnya)</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-809e-9c3b-c94c00db447d" class="">Karena sebelumnya kamu pakai React + Zustand:</p></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-804d-82e9-d389a45503a2" class="">Contoh fetch dari frontend:</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-80cc-81c2-e5e68a8bb641" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">useEffect(() =&gt; {
+  fetch(&quot;http://localhost:3001/products&quot;)
+    .then((res) =&gt; res.json())
+    .then((data) =&gt; {
+      console.log(data);
+    });
+}, []);</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80ea-9bdc-dec5b24292b1"/></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-8067-94a9-df58c60b35af" class="">🔥 Integrasi ke Zustand (mini preview sesi lanjutan)</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-801f-80b6-ec2ac735f3e1" class="code code-wrap"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">import { create } from &quot;zustand&quot;;
+
+export const useProductStore = create((set) =&gt; ({
+  products: [],
+
+  fetchProducts: async () =&gt; {
+    const res = await fetch(&quot;http://localhost:3001/products&quot;);
+    const data = await res.json();
+    set({ products: data });
+  },
+}));</code></pre></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80f2-8189-e4f1ae6b1298"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-804f-8c2d-dcade927c3f6" class="">🧪 7. Praktik AI (Wajib)</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-80d2-a09b-f9d825ffac1b" class="">Gunakan prompt ini:</p></div><div style="display:contents" dir="auto"><blockquote id="3885c3bd-8582-80bd-a57b-c2f2eff5e981" class=""><strong>&quot;Buatkan boilerplate Express.js server yang aman untuk pemula, lengkap dengan CRUD products, middleware CORS, JSON parser, dan struktur folder scalable (routes, controllers, models).&quot;</strong></blockquote></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-8061-a82e-f151a00f50fc"/></div><div style="display:contents" dir="ltr"><figure id="3885c3bd-8582-80d0-af38-f54d14e80a54" class="image"><a href="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image%203.png"><img style="width:703.9931030273438px" src="Sesi%2010%20Express%20js%20Foundation%20(Backend%20untuk%20CRUD%20/image%203.png"/></a></figure></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-805f-83ce-c3b184b04065" class="">🧭 8. Pendalaman Mandiri (Important Mindset)</h1></div><div style="display:contents" dir="auto"><h2 id="3885c3bd-8582-80e6-a439-c3fa183c03d6" class="">🧠 Lifecycle Request (Deep Understanding)</h2></div><div style="display:contents" dir="auto"><pre id="3885c3bd-8582-8024-a54b-caa824453ad1" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">1. Browser kirim request
+2. DNS resolve → server ditemukan
+3. Express menerima request
+4. Middleware berjalan (CORS, logging, auth)
+5. Route handler dipanggil
+6. Logic dijalankan (CRUD / DB)
+7. Response dikirim (JSON)
+8. Frontend render ulang UI</code></pre></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8016-92dc-c37aed87a60a" class="">📌 Ini inti “fullstack thinking”</p></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80b1-8921-daefb810714f"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-8037-aa9d-ce74aa4ee948" class="">🧩 Output Sesi 10</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-80e9-b133-ea7bbd338c1a" class="">Setelah sesi ini, kamu sudah punya:</p></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-807d-9be0-d693125b1aad" class="">✔ Express server</p></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-80de-ac3c-f3d056ed5730" class="">✔ CRUD products API</p></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8020-b62e-c402a340e0a0" class="">✔ Middleware basic (CORS + JSON parser)</p></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-804f-a60d-ca4d3e99a758" class="">✔ Ready connect ke React/Zustand</p></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-807b-832b-ec1982f82f24" class="">✔ Foundation backend untuk MiniStore project</p></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-80a2-8071-ccfe424ec3cc"/></div><div style="display:contents" dir="auto"><h1 id="3885c3bd-8582-8014-b2e6-f99b4877e532" class="">➕ Next Step (Sesi 11 preview)</h1></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8072-bccd-f29a6343fbec" class="">Kalau lanjut:</p></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8083-8887-e4424c0db725" class="bulleted-list"><li style="list-style-type:disc">Struktur folder (MVC pattern)</li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-809f-b615-c579ba0db256" class="bulleted-list"><li style="list-style-type:disc">Move from memory → database (PostgreSQL / Supabase)</li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8038-9b36-c72b0dabecc5" class="bulleted-list"><li style="list-style-type:disc">Authentication basic (JWT)</li></ul></div><div style="display:contents" dir="auto"><ul id="3885c3bd-8582-8077-b4b5-e945b01046cf" class="bulleted-list"><li style="list-style-type:disc">Connect full MiniStore end-to-end</li></ul></div><div style="display:contents" dir="auto"><hr id="3885c3bd-8582-808b-b8e7-ca509da7599b"/></div><div style="display:contents" dir="auto"><p id="3885c3bd-8582-8033-a1c1-fb7181bd60f9" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
