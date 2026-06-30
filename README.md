@@ -35,7 +35,10 @@ GET /products
 ```json
 [
   { "id": 1, "name": "Laptop", "price": 1000 },
-  { "id": 2, "name": "Mouse", "price": 50 }
+  { "id": 2, "name": "Mouse", "price": 50 },
+  { "id": 3, "name": "Keyboard", "price": 80 },
+  { "id": 4, "name": "Monitor", "price": 200 },
+  { "id": 5, "name": "Headphones", "price": 150 },
 ]
 ```
 
