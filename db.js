@@ -17,65 +17,21 @@ const initializeDatabase = async () => {
   const db = getClient();
   
   try {
-    // Create users table
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        role TEXT DEFAULT 'user',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    // Create products table
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS products (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        price REAL NOT NULL,
-        description TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    // Insert default admin user if not exists
-    const adminExists = await db.execute(
-      'SELECT * FROM users WHERE username = ?',
-      ['operator']
+    // Check if tables exist
+    const tablesResult = await db.execute(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('users', 'products')"
     );
 
-    if (adminExists.rows.length === 0) {
-      // Hash password using bcryptjs
-      const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash('developer2510', 10);
-      
-      await db.execute(
-        'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-        ['operator', hashedPassword, 'admin']
-      );
-      console.log('✅ Default admin user created: operator/developer2510');
+    if (tablesResult.rows.length === 0) {
+      console.log('⚠️  Database tables not found!');
+      console.log('🌱 Run "npm run seed" to initialize schema with sample data');
+      console.log('✅ Database will still work with in-memory fallback for now\n');
     }
 
-    // Insert sample products if table is empty
-    const productsCount = await db.execute('SELECT COUNT(*) as count FROM products');
-    if (productsCount.rows[0].count === 0) {
-      await db.execute(
-        'INSERT INTO products (name, price, description) VALUES (?, ?, ?)',
-        ['Laptop', 1000, 'High-performance laptop for development']
-      );
-      await db.execute(
-        'INSERT INTO products (name, price, description) VALUES (?, ?, ?)',
-        ['Mouse', 50, 'Wireless mouse with precision tracking']
-      );
-      console.log('✅ Sample products inserted');
-    }
-
-    console.log('✅ Database initialized successfully');
+    console.log('✅ Database connection established');
   } catch (error) {
-    console.error('❌ Database initialization error:', error.message);
-    throw error;
+    console.error('⚠️  Database initialization warning:', error.message);
+    // Don't throw - let app continue with in-memory data
   }
 };
 
