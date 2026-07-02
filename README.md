@@ -69,7 +69,7 @@ POST /login
 Content-Type: application/json
 
 {
-  "username": "operator",
+  "email": "operator@example.com",
   "password": "developer2510"
 }
 ```
@@ -81,7 +81,7 @@ Content-Type: application/json
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "id": 1,
-    "username": "operator",
+    "email": "operator@example.com",
     "role": "admin"
   }
 }

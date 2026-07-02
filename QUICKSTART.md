@@ -18,7 +18,7 @@ npm run dev
 # Get token
 TOKEN=$(curl -s -X POST http://localhost:3001/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"operator","password":"developer2510"}' | grep -o '"token":"[^"]*' | cut -d'"' -f4)
+  -d '{"email":"operator@example.com","password":"developer2510"}' | grep -o '"token":"[^"]*' | cut -d'"' -f4)
 
 # Get products
 curl http://localhost:3001/products \
@@ -31,7 +31,7 @@ curl http://localhost:3001/products \
 
 ### With Postman
 1. **POST /login**
-   - Body: `{"username":"operator","password":"developer2510"}`
+   - Body: `{"email":"operator@example.com","password":"developer2510"}`
    - Copy token from response
 
 2. **GET /products**
@@ -159,7 +159,7 @@ Edit `.env`: `PORT=3002`
 const response = await fetch('http://localhost:3001/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ username: 'operator', password: 'developer2510' })
+  body: JSON.stringify({ email: 'operator@example.com', password: 'developer2510' })
 });
 const { token } = await response.json();
 localStorage.setItem('token', token);
