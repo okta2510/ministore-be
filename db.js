@@ -19,7 +19,7 @@ const initializeDatabase = async () => {
   try {
     // Check if tables exist
     const tablesResult = await db.execute(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('users', 'products')"
+      "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('User', 'Product')"
     );
 
     if (tablesResult.rows.length === 0) {

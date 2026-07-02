@@ -3,20 +3,20 @@ const jwt = require('jsonwebtoken');
 const { getClient } = require('../../db');
 const { ApiError } = require('../helpers/apiError');
 
-const login = async ({ username, password }) => {
+const login = async ({ email, password }) => {
   const db = getClient();
-  const result = await db.execute('SELECT id, name, email, password, role, status FROM User WHERE email = ? LIMIT 1', [
-    username,
+  const result = await db.execute('SELECT id, name, email, password, role, status FROM "User" WHERE email = ? LIMIT 1', [
+    email,
   ]);
 
   const user = result.rows[0];
   if (!user) {
-    throw new ApiError(401, 'Invalid username or password');
+    throw new ApiError(401, 'Invalid email or password');
   }
 
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) {
-    throw new ApiError(401, 'Invalid username or password');
+    throw new ApiError(401, 'Invalid email or password');
   }
 
   const token = jwt.sign(

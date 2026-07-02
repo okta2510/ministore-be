@@ -10,7 +10,7 @@ const loginHandler = async (req, res, next) => {
       throw new ApiError(400, 'Email and password are required');
     }
 
-    const result = await login({ username: email.trim(), password });
+    const result = await login({ email: email.trim(), password });
     res.json(result);
   } catch (error) {
     next(error);
