@@ -1,5 +1,5 @@
 const { login } = require('../services/authService');
-const { isNonEmptyString } = require('../helpers/validators');
+const { isEmailString, isNonEmptyString } = require('../helpers/validators');
 const { ApiError } = require('../helpers/apiError');
 
 const loginHandler = async (req, res, next) => {
@@ -10,7 +10,12 @@ const loginHandler = async (req, res, next) => {
       throw new ApiError(400, 'Email and password are required');
     }
 
-    const result = await login({ email: email.trim(), password });
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!isEmailString(normalizedEmail)) {
+      throw new ApiError(400, 'Invalid email format');
+    }
+
+    const result = await login({ email: normalizedEmail, password });
     res.json(result);
   } catch (error) {
     next(error);

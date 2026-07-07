@@ -10,9 +10,9 @@ const {
 
 const router = express.Router();
 
-router.use(authenticateToken);
 router.get('/', listProductsHandler);
 router.get('/:id', getProductHandler);
+router.use(authenticateToken);
 router.post('/', createProductHandler);
 router.put('/:id', updateProductHandler);
 router.delete('/:id', deleteProductHandler);

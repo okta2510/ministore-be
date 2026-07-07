@@ -5,9 +5,10 @@ const { ApiError } = require('../helpers/apiError');
 
 const login = async ({ email, password }) => {
   const db = getClient();
-  const result = await db.execute('SELECT id, name, email, password, role, status FROM "User" WHERE email = ? LIMIT 1', [
-    email,
-  ]);
+  const result = await db.execute(
+    'SELECT id, name, email, password, role, status FROM "User" WHERE email = ? LIMIT 1',
+    [email.trim().toLowerCase()]
+  );
 
   const user = result.rows[0];
   if (!user) {

@@ -34,6 +34,12 @@ npm run seed
 npm run dev
 ```
 
+The seed script creates:
+
+- 2 users
+- 15 sample products
+- 1 sample order
+
 ## Default login
 
 - Email: `operator@example.com`
@@ -68,9 +74,13 @@ Response:
 curl:
 
 ```bash
-curl -X POST http://localhost:3001/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"operator@example.com","password":"developer2510"}'
+curl -X POST http://localhost:3001/login -H "Content-Type: application/json" -d '{"email":"operator@example.com","password":"developer2510"}'
+```
+
+Use the returned token for POST, PUT, and DELETE requests:
+
+```bash
+Authorization: Bearer <your-token>
 ```
 
 ### GET `/products`
@@ -80,8 +90,7 @@ Returns all products.
 curl:
 
 ```bash
-curl http://localhost:3001/products \
-  -H "Authorization: Bearer <token>"
+curl http://localhost:3001/products
 ```
 
 ### GET `/products/:id`
@@ -91,8 +100,7 @@ Returns one product.
 curl:
 
 ```bash
-curl http://localhost:3001/products/1 \
-  -H "Authorization: Bearer <token>"
+curl http://localhost:3001/products/1
 ```
 
 ### POST `/products`
@@ -113,17 +121,7 @@ Request:
 curl:
 
 ```bash
-curl -X POST http://localhost:3001/products \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{
-    "name":"Keyboard",
-    "price":75,
-    "category":"Accessories",
-    "stock":10,
-    "description":"Mechanical keyboard",
-    "image_url":"https://example.com/keyboard.png"
-  }'
+curl -X POST http://localhost:3001/products -H "Content-Type: application/json" -H "Authorization: Bearer <your-token>" -d '{"name":"Keyboard","price":75,"category":"Accessories","stock":10,"description":"Mechanical keyboard","image_url":"https://example.com/keyboard.png"}'
 ```
 
 ### PUT `/products/:id`
@@ -133,14 +131,7 @@ Updates a product with the same fields as create.
 curl:
 
 ```bash
-curl -X PUT http://localhost:3001/products/1 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{
-    "name":"Gaming Keyboard",
-    "price":99,
-    "stock":8
-  }'
+curl -X PUT http://localhost:3001/products/1 -H "Content-Type: application/json" -H "Authorization: Bearer <your-token>" -d '{"name":"Gaming Keyboard","price":99,"stock":8}'
 ```
 
 ### DELETE `/products/:id`
@@ -150,11 +141,10 @@ Deletes a product.
 curl:
 
 ```bash
-curl -X DELETE http://localhost:3001/products/1 \
-  -H "Authorization: Bearer <token>"
+curl -X DELETE http://localhost:3001/products/1 -H "Authorization: Bearer <your-token>"
 ```
 
-All `/products` routes require `Authorization: Bearer <token>`.
+Only POST, PUT, and DELETE `/products` routes require `Authorization: Bearer <your-token>`.
 
 ## Schema
 
