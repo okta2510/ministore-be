@@ -8,6 +8,7 @@ Express + Turso SQL API with JWT auth, organized into routes, controllers, and s
 - Modular Express structure
 - Turso/local SQLite support
 - CRUD for products
+- Pagination for product list
 - Schema-based endpoints
 
 ## Setup
@@ -85,12 +86,31 @@ Authorization: Bearer <your-token>
 
 ### GET `/products`
 
-Returns all products.
+Returns paginated products.
+
+Query params:
+
+- `page` default: `1`
+- `limit` default: `5`
 
 curl:
 
 ```bash
-curl http://localhost:3001/products
+curl "http://localhost:3001/products?page=1&limit=5"
+```
+
+Response:
+
+```json
+{
+  "data": [],
+  "pagination": {
+    "page": 1,
+    "limit": 5,
+    "totalItems": 0,
+    "totalPages": 0
+  }
+}
 ```
 
 ### GET `/products/:id`

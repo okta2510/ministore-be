@@ -12,8 +12,14 @@ const toNumber = (value) => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const toPositiveInt = (value) => {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+};
+
 module.exports = {
   isNonEmptyString,
   isEmailString,
   toNumber,
+  toPositiveInt,
 };

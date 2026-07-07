@@ -6,7 +6,7 @@ const {
   deleteProduct,
 } = require('../services/productService');
 const { ApiError } = require('../helpers/apiError');
-const { isNonEmptyString, toNumber } = require('../helpers/validators');
+const { isNonEmptyString, toNumber, toPositiveInt } = require('../helpers/validators');
 
 const validateProductPayload = (body, partial = false) => {
   const price = body.price !== undefined ? toNumber(body.price) : undefined;
@@ -32,7 +32,14 @@ const validateProductPayload = (body, partial = false) => {
 
 const listProductsHandler = async (req, res, next) => {
   try {
-    res.json(await listProducts());
+    const page = req.query.page === undefined ? 1 : toPositiveInt(req.query.page);
+    const limit = req.query.limit === undefined ? 5 : toPositiveInt(req.query.limit);
+
+    if (page === null || limit === null) {
+      throw new ApiError(400, 'page and limit must be positive integers');
+    }
+
+    res.json(await listProducts({ page, limit }));
   } catch (error) {
     next(error);
   }

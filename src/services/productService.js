@@ -13,10 +13,28 @@ const mapProduct = (row) => ({
   updated_at: row.updated_at,
 });
 
-const listProducts = async () => {
+const listProducts = async ({ page = 1, limit = 5 } = {}) => {
   const db = getClient();
-  const result = await db.execute('SELECT * FROM Product ORDER BY id ASC');
-  return result.rows.map(mapProduct);
+  const offset = (page - 1) * limit;
+
+  const totalResult = await db.execute('SELECT COUNT(*) AS total FROM Product');
+  const totalItems = Number(totalResult.rows[0]?.total ?? 0);
+  const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
+
+  const result = await db.execute(
+    'SELECT * FROM Product ORDER BY id ASC LIMIT ? OFFSET ?',
+    [limit, offset]
+  );
+
+  return {
+    data: result.rows.map(mapProduct),
+    pagination: {
+      page,
+      limit,
+      totalItems,
+      totalPages,
+    },
+  };
 };
 
 const getProductById = async (id) => {
