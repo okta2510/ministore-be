@@ -7,6 +7,8 @@ const productsRouter = require("./routes/products");
 const authRouter = require("./routes/auth");
 const { authMiddleware } = require("./middleware/jwt");
 
+const db = require("./db/client");
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -27,6 +29,16 @@ app.get("/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
+// DB health check
+app.get("/db/health", async (req, res) => {
+  try {
+    await db.execute("SELECT 1");
+    res.json({ db: "connected", provider: "turso" });
+  } catch (err) {
+    res.status(500).json({ db: "error", message: err.message });
+  }
+});
+
 // ===== ERROR HANDLING =====
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
@@ -37,8 +49,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal server error" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  try {
+    await db.execute("SELECT 1");
+    console.log("Turso database: connected ✅");
+  } catch (err) {
+    console.log("Turso database: NOT connected ❌ (" + err.message + ")");
+  }
   console.log("");
   console.log("Routes:");
   console.log(`GET    http://localhost:${PORT}/                       (public)`);

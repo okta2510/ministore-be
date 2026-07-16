@@ -30,8 +30,12 @@ ministore-be/
 │   ├── products.js        # CRUD produk (GET publik, POST/PUT/DELETE protected)
 │   └── auth.js            # POST /auth/login -> JWT token
 ├── data/
-│   ├── products.js        # Dummy data produk (in-memory)
-│   └── users.js           # Dummy data user (untuk login JWT)
+│   ├── products.js        # Dummy data produk (in-memory, fallback belajar)
+│   └── users.js           # Dummy data user (untuk login JWT, fallback)
+├── db/
+│   ├── client.js          # Koneksi LibSQL client ke Turso
+│   ├── schema.sql         # Skema tabel (users, products, orders, order_items)
+│   └── init.js            # Migrasi + seed data ke Turso
 └── node_modules/          # Dependencies (otomatis saat npm install)
 ```
 
@@ -52,6 +56,7 @@ npm init -y
 ```bash
 npm install express cors dotenv
 npm install jsonwebtoken bcrypt
+npm install @libsql/client
 npm install --save-dev nodemon
 ```
 
@@ -293,9 +298,11 @@ app.listen(PORT, () => {
 ### 5. Jalankan server
 
 ```bash
-npm run dev      # pakai nodemon (auto restart)
+npm install        # install semua dependency (jika belum)
+npm run db:init    # buat skema + seed ke Turso (sekali / saat skema berubah)
+npm run dev        # pakai nodemon (auto restart)
 # atau
-npm start        # node server.js
+npm start          # node server.js
 ```
 
 Buka `http://localhost:3001` di browser → muncul `Express server is running 🚀`.
@@ -399,6 +406,47 @@ Atau gunakan **Postman / Thunder Client**:
 ```
 
 > Data disimpan **in-memory** (di-reset tiap server restart). Cocok untuk belajar; untuk production gunakan database (lihat `.env` `TURSO_*` sebagai referensi).
+
+---
+
+## 🛢️ Turso Database (Sesi 15)
+
+Project terhubung ke **Turso** (LibSQL cloud, kompatibel SQLite) lewat `@libsql/client`.
+
+### Setup `.env`
+Tambahkan ke file `.env`:
+```env
+TURSO_CONNECTION_URL=libsql://<db-name>-<org>.turso.io
+TURSO_AUTH_TOKEN=<your-token>
+```
+
+### Buat skema & seed
+```bash
+npm run db:init
+```
+Script (`db/init.js`) akan:
+1. Membuat tabel `users`, `products`, `orders`, `order_items` (jika belum ada).
+2. Seed user demo (password `password123`):
+   - `admin@mail.com` (role admin)
+   - `staff@mail.com` (role staff)
+   - `customer@mail.com` (role customer)
+3. Seed produk: Laptop, Mouse, Keyboard.
+
+### Cek koneksi
+```bash
+curl http://localhost:3001/db/health
+# -> { "db": "connected", "provider": "turso" }
+```
+
+### Skema tabel
+| Tabel        | Kolom utama                              |
+|--------------|------------------------------------------|
+| `users`      | id, name, email (unique), password, role |
+| `products`   | id, name, price, stock                   |
+| `orders`     | id, user_id, total, status               |
+| `order_items`| id, order_id, product_id, qty, price     |
+
+> Catatan: `routes/products.js` & `routes/auth.js` saat ini masih pakai data in-memory (`data/`) sebagai materi belajar. Untuk produksi, ganti logikanya memakai `db/client.js` (query LibSQL).
 
 ---
 
