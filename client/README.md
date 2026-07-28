@@ -1,6 +1,6 @@
 # Ministore Client
 
-React frontend for the Ministore API.
+React frontend for the Ministore API. Displays products in a styled table with Tailwind CSS and React Router.
 
 ## Setup
 
@@ -33,7 +33,7 @@ npm run build
 ## Routing
 
 - `/` — Home page
-- `/products` — Fetches and displays products from `http://localhost:3001/products`
+- `/products` — Fetches and displays products from `http://localhost:3001/products` in a table
 
 ## API
 
@@ -50,3 +50,25 @@ Axios is configured in `src/api/axios.js` with `baseURL: http://localhost:3001`.
 - `createItem(data)` — POST /items
 - `updateItem(id, data)` — PUT /items/:id
 - `deleteItem(id)` — DELETE /items/:id
+
+## Project Structure
+
+```
+client/
+├── index.html
+├── package.json
+├── tailwind.config.js
+├── vite.config.js
+├── .gitignore
+├── README.md
+└── src/
+    ├── index.jsx          # React entry point
+    ├── index.css          # Tailwind CSS entry
+    ├── App.jsx            # Root component with routing
+    ├── api/
+    │   ├── axios.js       # Axios instance with interceptors
+    │   └── example.js     # API functions
+    └── components/
+        ├── Products.jsx   # Table UI for products
+        └── Example.jsx    # Example component
+```
