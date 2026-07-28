@@ -36,6 +36,22 @@ ministore-be/
 │   ├── client.js          # Koneksi LibSQL client ke Turso
 │   ├── schema.sql         # Skema tabel (users, products, orders, order_items)
 │   └── init.js            # Migrasi + seed data ke Turso
+├── client/                # React frontend (Tailwind CSS + React Router)
+│   ├── index.html
+│   ├── package.json
+│   ├── tailwind.config.js
+│   ├── vite.config.js
+│   ├── .gitignore
+│   └── src/
+│       ├── index.jsx      # React entry point
+│       ├── index.css      # Tailwind CSS entry
+│       ├── App.jsx        # Root component with routing
+│       ├── api/
+│       │   ├── axios.js   # Axios instance with interceptors
+│       │   └── example.js # API functions
+│       └── components/
+│           ├── Products.jsx  # Table UI for products
+│           └── Example.jsx   # Example component
 └── node_modules/          # Dependencies (otomatis saat npm install)
 ```
 
@@ -397,7 +413,7 @@ Atau gunakan **Postman / Thunder Client**:
 
 **Product**
 ```javascript
-{ id: Number, name: String, price: Number }
+{ id: Number, name: String, price: Number, description: String, category: String, tag: String[] }
 ```
 
 **User (JWT)**
@@ -452,9 +468,40 @@ curl http://localhost:3001/db/health
 
 ## 🔜 Next Steps (Frontend Integration)
 
+A React frontend is available in the `client/` folder:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+The client runs on `http://localhost:3000` and includes:
+
+- **Tailwind CSS** — styled UI
+- **React Router DOM v6** — client-side routing
+- **Axios** — HTTP client with interceptors
+- **Products Table** — fetches and displays products from `http://localhost:3001/products`
+
+### Quick start
+
+```bash
+# Terminal 1: Start the backend API
+cd /ministore-be
+npm run dev
+
+# Terminal 2: Start the React frontend
+cd client
+npm run dev
+```
+
+### API integration example
+
 ```javascript
-const res = await fetch("http://localhost:3001/products");
-const products = await res.json();
+import api from './api/axios'
+
+const response = await api.get('/products')
+const products = response.data
 ```
 
 ---

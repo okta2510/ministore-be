@@ -72,3 +72,11 @@ client/
         ├── Products.jsx   # Table UI for products
         └── Example.jsx    # Example component
 ```
+
+## Features
+
+- **Products Table** — fetches from `GET http://localhost:3001/products` and displays in a styled table with columns: ID, Name, Category, Description, Price, Tags
+- **Price formatting** — Indonesian Rupiah (IDR) format
+- **Tailwind CSS** — responsive, hover effects, badges for category and tags
+- **Axios interceptors** — automatic JWT token attachment and error handling
+- **Vite proxy** — `/products` requests proxied to port 3001
