@@ -9,6 +9,9 @@ app.use(cors()); // allow frontend access
 app.use(express.json()); // parse JSON body
 
 // ===== DUMMY DATA =====
+// [1,2,3,4,5]  array of number
+// ['a','b','c'] array of string
+// [{name: "a"}, {name: "b"}, {name: "c"}] array of object
 let products = [
   { id: 1, name: "Laptop", price: 1000 },
   { id: 2, name: "Mouse", price: 50 },
@@ -27,6 +30,7 @@ app.get("/products", (req, res) => {
 });
 
 // READ by ID (GET specific product)
+// localhost:3001/products/1 | :id = 1 (id valuenya = 1)
 app.get("/products/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const product = products.find((p) => p.id === id);
