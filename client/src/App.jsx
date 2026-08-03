@@ -1,7 +1,14 @@
 import { Routes, Route, Link } from 'react-router-dom'
+import { useEffect } from 'react'
 import Products from './components/Products'
 
 function App() {
+  useEffect(() => {
+    if (!localStorage.getItem('adminKey')) {
+      localStorage.setItem('adminKey', 'secret123')
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-blue-600 text-white p-4 shadow-md">

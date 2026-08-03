@@ -24,10 +24,21 @@ router.get("/:id", (req, res) => {
 
 // POST produk baru (protected)
 router.post("/", adminAuth, (req, res) => {
+  const { name, price, description, category, tag } = req.body;
+
+  if (!name || price === undefined || price === null) {
+    return res.status(400).json({
+      message: "Name and price are required"
+    });
+  }
+
   const product = {
     id: Date.now(),
-    name: req.body.name,
-    price: req.body.price
+    name,
+    price,
+    description: description ?? "",
+    category: category ?? "",
+    tag: tag ?? []
   };
 
   products.push(product);
@@ -50,6 +61,9 @@ router.put("/:id", adminAuth, (req, res) => {
 
   product.name = req.body.name ?? product.name;
   product.price = req.body.price ?? product.price;
+  product.description = req.body.description ?? product.description;
+  product.category = req.body.category ?? product.category;
+  product.tag = req.body.tag ?? product.tag;
 
   res.json({
     message: "Product updated",
@@ -59,7 +73,7 @@ router.put("/:id", adminAuth, (req, res) => {
 
 // DELETE produk (protected)
 router.delete("/:id", adminAuth, (req, res) => {
-  const index = products.findIndex(p => p.id != req.params.id);
+  const index = products.findIndex(p => p.id == req.params.id);
 
   if (index === -1) {
     return res.status(404).json({
@@ -67,7 +81,7 @@ router.delete("/:id", adminAuth, (req, res) => {
     });
   }
 
-  products = products.filter(p => p.id != req.params.id);
+  products.splice(index, 1);
 
   res.json({
     message: "Product deleted"

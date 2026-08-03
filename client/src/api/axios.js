@@ -12,6 +12,10 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  const adminKey = localStorage.getItem('adminKey')
+  if (adminKey) {
+    config.headers['adminkey'] = adminKey
+  }
   return config
 })
 

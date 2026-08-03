@@ -33,7 +33,11 @@ npm run build
 ## Routing
 
 - `/` — Home page
-- `/products` — Fetches and displays products from `http://localhost:3001/products` in a table
+- `/products` — Displays products in a CRUD table with create/edit/delete modals
+
+## Auth
+
+Write operations (create, update, delete) require the `adminkey` header. The admin key (`secret123`) is stored in `localStorage` under `adminKey` and automatically attached to all API requests via an Axios request interceptor defined in `src/api/axios.js`.
 
 ## API
 
@@ -41,7 +45,13 @@ Axios is configured in `src/api/axios.js` with `baseURL: http://localhost:3001`.
 
 ### Products
 
+Located in `src/api/products.js`.
+
 - `getProducts()` — GET /products
+- `getProductById(id)` — GET /products/:id
+- `createProduct(data)` — POST /products (admin key required)
+- `updateProduct(id, data)` — PUT /products/:id (admin key required)
+- `deleteProduct(id)` — DELETE /products/:id (admin key required)
 
 ### Items
 
@@ -67,16 +77,21 @@ client/
     ├── App.jsx            # Root component with routing
     ├── api/
     │   ├── axios.js       # Axios instance with interceptors
-    │   └── example.js     # API functions
+    │   ├── example.js     # API functions
+    │   └── products.js    # Product CRUD API functions
     └── components/
-        ├── Products.jsx   # Table UI for products
-        └── Example.jsx    # Example component
+        ├── Products.jsx       # CRUD table UI for products
+        ├── ProductModal.jsx   # Modal form for create/edit
+        └── Example.jsx        # Example component
 ```
 
 ## Features
 
-- **Products Table** — fetches from `GET http://localhost:3001/products` and displays in a styled table with columns: ID, Name, Category, Description, Price, Tags
+- **Products Table** — fetches from `GET http://localhost:3001/products` and displays in a styled table with columns: ID, Name, Category, Description, Price, Tags, Actions
+- **Create Product** — "Add Product" button opens a modal form (requires admin key)
+- **Update Product** — "Edit" button opens a pre-filled modal form (requires admin key)
+- **Delete Product** — "Delete" button removes a product with confirmation (requires admin key)
 - **Price formatting** — Indonesian Rupiah (IDR) format
 - **Tailwind CSS** — responsive, hover effects, badges for category and tags
-- **Axios interceptors** — automatic JWT token attachment and error handling
-- **Vite proxy** — `/products` requests proxied to port 3001
+- **Axios interceptors** — automatic admin key attachment and error handling
+- **Vite proxy** — `/api` requests proxied to port 3001
