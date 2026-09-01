@@ -7,18 +7,22 @@ const {
 } = require('../services/productService');
 const { ApiError } = require('../helpers/apiError');
 const { isNonEmptyString, toNumber, toPositiveInt } = require('../helpers/validators');
+const { validateNonNegativeNumber } = require('../helpers/validation');
 
 const validateProductPayload = (body, partial = false) => {
   const price = body.price !== undefined ? toNumber(body.price) : undefined;
   const stock = body.stock !== undefined ? toNumber(body.stock) : undefined;
 
   if (!partial) {
-    if (!isNonEmptyString(body.name)) throw new ApiError(400, 'Name is required');
-    if (price === null || price === undefined) throw new ApiError(400, 'Price is required');
+    if (!isNonEmptyString(body.name)) throw new ApiError(400, 'Name is required', 'REQUIRED_FIELD');
+    if (price === null || price === undefined) throw new ApiError(400, 'Price is required', 'REQUIRED_FIELD');
   }
 
-  if (price === null) throw new ApiError(400, 'Price must be a valid number');
-  if (stock === null) throw new ApiError(400, 'Stock must be a valid number');
+  if (price === null) throw new ApiError(400, 'Price must be a valid number', 'INVALID_NUMBER');
+  if (stock === null) throw new ApiError(400, 'Stock must be a valid number', 'INVALID_NUMBER');
+
+  if (price !== undefined) validateNonNegativeNumber(price, 'price');
+  if (stock !== undefined) validateNonNegativeNumber(stock, 'stock');
 
   return {
     name: body.name?.trim(),
